@@ -56,3 +56,10 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# VsCode files ingore 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
