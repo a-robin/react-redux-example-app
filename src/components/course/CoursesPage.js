@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import CourseList from "./CourseList";
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import * as courseActions from "./../../actions/courseActions";
 
 class CoursesPage extends Component {
@@ -17,6 +19,11 @@ class CoursesPage extends Component {
     return (
       <div>
         <h1>Courses</h1>
+        <Link to="/course">
+          <Button type="submit" className="btn-primary">
+            Add Course
+          </Button>
+        </Link>
         <CourseList courses={courses} />
       </div>
     );
