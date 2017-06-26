@@ -4,6 +4,8 @@ import React, { Component } from "react";
 import * as courseActions from "./../../actions/courseActions";
 import CourseForm from "./CourseForm";
 import PropTypes from "prop-types";
+import jquery from "jquery";
+import toastr from "toastr";
 
 class ManageCoursePage extends Component {
   constructor(props, context) {
@@ -11,10 +13,12 @@ class ManageCoursePage extends Component {
 
     this.state = {
       course: Object.assign({}, this.props.course),
-      errors: {}
+      errors: {},
+      saving: false
     };
     this.updateCourseState = this.updateCourseState.bind(this);
     this.saveCourse = this.saveCourse.bind(this);
+    this.displaySuccessToast = this.displaySuccessToast.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.course.id !== nextProps.course.id) {
@@ -30,18 +34,34 @@ class ManageCoursePage extends Component {
 
   saveCourse(event) {
     event.preventDefault();
-    this.props.actions.saveCourse(this.state.course);
+    this.setState({ saving: true });
+    this.props.actions
+      .saveCourse(this.state.course)
+      .then(() => this.props.history.push("/courses"))
+      .then(() => this.displaySuccessToast())
+      .catch(error => {
+        this.setState({ saving: false });
+        toastr.error(error);
+      });
+  }
+
+  displaySuccessToast() {
+    toastr.success("Author saved.", "Duh!", {
+      closeButton: true
+    });
   }
   render() {
     return (
-      <CourseForm
-        course={this.state.course}
-        errors={this.state.errors}
-        allAuthors={this.props.authors}
-        onChange={this.updateCourseState}
-        onSave={this.saveCourse}
-        history={this.props.history}
-      />
+      <div>
+        <CourseForm
+          course={this.state.course}
+          errors={this.state.errors}
+          allAuthors={this.props.authors}
+          onChange={this.updateCourseState}
+          onSave={this.saveCourse}
+          saving={this.state.saving}
+        />
+      </div>
     );
   }
 }

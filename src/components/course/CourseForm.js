@@ -9,9 +9,8 @@ const CourseForm = ({
   allAuthors,
   onSave,
   onChange,
-  loading,
-  errors,
-  history
+  saving,
+  errors
 }) => {
   return (
     <form>
@@ -51,11 +50,10 @@ const CourseForm = ({
         type="submit"
         onClick={event => {
           onSave(event);
-          history.push("/courses");
         }}
-        disabled={loading}
+        disabled={saving}
       >
-        {loading ? "Saving ..." : "Save"}
+        {saving ? "Saving ..." : "Save"}
       </Button>
     </form>
   );
