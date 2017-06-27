@@ -4,7 +4,7 @@ import Routes from "./routes";
 import Header from "./common/Header";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-class App extends Component {
+export class App extends Component {
   render() {
     return (
       <div className="container-fluid">

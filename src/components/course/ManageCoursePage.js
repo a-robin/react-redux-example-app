@@ -6,8 +6,9 @@ import CourseForm from "./CourseForm";
 import PropTypes from "prop-types";
 import jquery from "jquery";
 import toastr from "toastr";
+import { authorsFormattedForDropdown } from "./../../selectors/selectors";
 
-class ManageCoursePage extends Component {
+export class ManageCoursePage extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -19,6 +20,7 @@ class ManageCoursePage extends Component {
     this.updateCourseState = this.updateCourseState.bind(this);
     this.saveCourse = this.saveCourse.bind(this);
     this.displaySuccessToast = this.displaySuccessToast.bind(this);
+    this.courseFormIsValid = this.courseFormIsValid.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.course.id !== nextProps.course.id) {
@@ -31,9 +33,22 @@ class ManageCoursePage extends Component {
     course[field] = event.target.value;
     return this.setState({ course: course });
   }
-
+  courseFormIsValid() {
+    let formIsValid = true;
+    let errors = {};
+    if (this.state.course.title.length < 5) {
+      errors.title = "Title to be at least 5 characters.";
+      formIsValid = false;
+    }
+    this.setState({
+      errors: errors
+    });
+    return formIsValid;
+  }
   saveCourse(event) {
     event.preventDefault();
+    if (!this.courseFormIsValid()) {
+    }
     this.setState({ saving: true });
     this.props.actions
       .saveCourse(this.state.course)
@@ -90,16 +105,9 @@ const mapStateToProps = (state, ownProps) => {
   if (courseId && state.courses.length > 0) {
     course = getCourseById(state.courses, courseId);
   }
-
-  const authorsFormattedForDropdown = state.authors.map(author => {
-    return {
-      value: author.id,
-      text: author.firstName + " " + author.lastName
-    };
-  });
   return {
     course: course,
-    authors: authorsFormattedForDropdown
+    authors: authorsFormattedForDropdown(state.authors)
   };
 };
 
